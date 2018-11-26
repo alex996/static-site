@@ -1,3 +1,4 @@
+import 'bulma/css/bulma.css'
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import Router from 'preact-router'
 import { Navbar } from './layouts'
