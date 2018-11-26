@@ -15,7 +15,8 @@
     "serve": "serve dist"
   },
   "dependencies": {
-    "preact": "^8.3.1"
+    "preact": "^8.3.1",
+    "preact-router": "^2.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.6",
