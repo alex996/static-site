@@ -5,13 +5,16 @@
   "description": "",
   "main": "index.js",
   "keywords": [],
-  "author": "Alex N",
+  "author": "CodeRealm",
   "license": "ISC",
   "scripts": {
-    "build": "rm -r dist && rollup -c",
+    "clean": "rimraf dist",
+    "transform": "node scripts/md2json",
+    "bundle": "rollup -c",
+    "build": "run-s clean transform bundle",
     "watch": "rollup -c -w",
     "reload": "reload -b -d dist -p 3000",
-    "dev": "run-p watch reload",
+    "dev": "run-p transform watch reload",
     "serve": "serve dist"
   },
   "dependencies": {
@@ -25,8 +28,13 @@
     "@babel/plugin-transform-react-jsx": "^7.1.6",
     "@babel/preset-env": "^7.1.6",
     "babel-eslint": "^10.0.1",
+    "node-dir": "^0.1.17",
     "npm-run-all": "^4.1.5",
+    "rehype-stringify": "^5.0.0",
     "reload": "^2.3.1",
+    "remark-parse": "^6.0.3",
+    "remark-rehype": "^4.0.0",
+    "rimraf": "^2.6.2",
     "rollup": "^0.67.3",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-copy": "^0.2.3",
@@ -34,7 +42,8 @@
     "rollup-plugin-postcss": "^1.6.3",
     "rollup-plugin-terser": "^3.0.0",
     "serve": "^10.1.1",
-    "standard": "^12.0.1"
+    "standard": "^12.0.1",
+    "unified": "^7.0.2"
   },
   "standard": {
     "parser": "babel-eslint"
