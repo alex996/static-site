@@ -46,6 +46,9 @@
     "unified": "^7.0.2"
   },
   "standard": {
-    "parser": "babel-eslint"
+    "parser": "babel-eslint",
+    "globals": [
+      "fetch"
+    ]
   }
 }
