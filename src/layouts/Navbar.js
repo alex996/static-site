@@ -6,7 +6,6 @@ const Navbar = props => (
     <Link href='/'>Home</Link>
     <Link href='/blog'>Blog</Link>
     <Link href='/about'>About</Link>
-    <Link href='/fsf'>asdf</Link>
   </nav>
 )
 

@@ -4,7 +4,7 @@ import postcss from 'rollup-plugin-postcss'
 import { terser } from 'rollup-plugin-terser'
 import resolve from 'rollup-plugin-node-resolve'
 
-const dir = 'dist'
+const dir = 'build'
 const production = !process.env.ROLLUP_WATCH
 
 export default {

@@ -8,14 +8,15 @@
   "author": "CodeRealm",
   "license": "ISC",
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "rimraf build",
     "transform": "node scripts/md2json",
     "bundle": "rollup -c",
     "build": "run-s clean transform bundle",
+    "postbuild": "react-snap",
     "watch": "rollup -c -w",
-    "reload": "reload -b -d dist -p 3000",
+    "reload": "reload -b -f -d build -p 3000",
     "dev": "run-p transform watch reload",
-    "serve": "serve dist"
+    "serve": "serve build"
   },
   "dependencies": {
     "bulma": "^0.7.2",
@@ -30,6 +31,7 @@
     "babel-eslint": "^10.0.1",
     "node-dir": "^0.1.17",
     "npm-run-all": "^4.1.5",
+    "react-snap": "^1.21.0",
     "rehype-stringify": "^5.0.0",
     "reload": "^2.3.1",
     "remark-parse": "^6.0.3",

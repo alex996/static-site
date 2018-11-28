@@ -25,7 +25,7 @@ class Page extends Component {
   fetchContents () {
     const { path } = this.props
 
-    return fetch(`/content${path}.json`)
+    return fetch(`/json${path}.json`)
       .then(res => {
         if (res.ok) {
           res.json().then(({ contents }) => {
