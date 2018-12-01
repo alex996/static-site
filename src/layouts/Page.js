@@ -7,29 +7,30 @@ class Page extends Component {
   }
 
   componentDidMount () {
-    !this.props.component && this.fetchContents()
-  }
-
-  componentDidUpdate (prevProps) {
     const { component, path } = this.props
 
-    if (prevProps.path !== path) {
+    !component && this.fetchContents(path)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const { component, path } = nextProps
+
+    if (this.props.path !== path) {
       this.setState({ err: null })
 
       if (!component && !this.state[path]) {
-        this.fetchContents()
+        this.fetchContents(path)
       }
     }
   }
 
-  fetchContents () {
-    const { path } = this.props
-
-    return fetch(`/json${path}.json`)
+  // TODO: move to api.js
+  fetchContents (path) {
+    fetch(`/json${path}.json`)
       .then(res => {
         if (res.ok) {
           res.json().then(({ contents }) => {
-            // TODO: cache in offline storage
+            // TODO: cache in offline storage (cache with or service worker)
             this.setState({ [path]: contents })
           })
         } else {
