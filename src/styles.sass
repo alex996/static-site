@@ -12,4 +12,21 @@
 @import "../node_modules/bulma/sass/elements/title.sass";
 
 @import "../node_modules/bulma/sass/layout/hero.sass";
+@import "../node_modules/bulma/sass/layout/footer.sass";
 @import "../node_modules/bulma/sass/layout/section.sass";
+
+// Sticky footer
+#fragment
+  min-height: 100vh;
+  flex-direction: column;
+
+#fragment main
+  flex: 1 0 auto;
+
+// Page fade-in animation
+.has-fade-in
+  animation: fadein 0.5s;
+
+@keyframes fadein
+  from { opacity: 0; }
+  to   { opacity: 1; }

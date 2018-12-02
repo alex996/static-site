@@ -1,17 +1,17 @@
 import { h, Component } from 'preact' // eslint-disable-line no-unused-vars
-import { Link } from 'preact-router'
+import { Link } from 'preact-router/match'
 
 class Blog extends Component {
   state = {
     posts: []
   }
 
+  // TODO: this gets unmounted
   componentDidMount () {
     fetch('/json/blog/index.json')
       .then(res => {
         res.json()
           .then(posts => {
-            console.log(posts)
             this.setState({ posts })
           })
       })
@@ -19,19 +19,17 @@ class Blog extends Component {
 
   render () {
     return (
-      <section class='section'>
-        <div class='container'>
-          <h1 class='is-1'>Blog</h1>
+      <div class='content'>
+        <h1>Blog</h1>
 
-          <ul>
-            {this.state.posts.map(post => (
-              <li>
-                <Link href={post.slug}>{post.title}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+        <ul>
+          {this.state.posts.map(post => (
+            <li>
+              <Link href={post.slug}>{post.title}</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     )
   }
 }

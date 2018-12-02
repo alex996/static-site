@@ -1,9 +1,10 @@
 import { h, Component } from 'preact' // eslint-disable-line no-unused-vars
+import { Progress } from '../components'
 import { Error } from '../pages'
 
 class Page extends Component {
   state = {
-    err: null
+    err: null, fromCache: false
   }
 
   componentDidMount () {
@@ -20,6 +21,8 @@ class Page extends Component {
 
       if (!component && !this.state[url]) {
         this.fetchContents(url)
+      } else {
+        this.setState({ fromCache: true })
       }
     }
   }
@@ -31,7 +34,7 @@ class Page extends Component {
         if (res.ok) {
           res.json().then(({ contents }) => {
             // TODO: cache in offline storage (cache with or service worker)
-            this.setState({ [url]: contents })
+            this.setState({ [url]: contents, fromCache: false })
           })
         } else {
           this.setState({
@@ -53,8 +56,8 @@ class Page extends Component {
       })
   }
 
-  render () {
-    const { err } = this.state
+  get content () {
+    const { err, fromCache } = this.state
 
     if (err) {
       return <Error {...err} />
@@ -68,17 +71,30 @@ class Page extends Component {
 
     const html = this.state[url]
 
-    if (!html) {
-      return <h1>Loading...</h1>
+    if (html) {
+      return (
+        <div
+          class={`content${fromCache ? '' : ' has-fade-in'}`}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      )
     }
 
-    return (
-      <section class='section'>
-        <div class='container'>
-          <div class='content' dangerouslySetInnerHTML={{ __html: html }} />
-        </div>
-      </section>
-    )
+    return <Progress parent='#section' />
+  }
+
+  render () {
+    const { noContainer = false } = this.props
+
+    return noContainer
+      ? this.content
+      : (
+        <section class='section' id='section'>
+          <div class='container'>
+            {this.content}
+          </div>
+        </section>
+      )
   }
 }
 
