@@ -4,7 +4,6 @@ const frontmatter = require('remark-frontmatter')
 const parseYaml = require('remark-parse-yaml')
 const remark2rehype = require('remark-rehype')
 const html = require('rehype-stringify')
-const addClasses = require('rehype-add-classes')
 
 const path = require('path')
 const fs = require('fs-extra')
@@ -38,10 +37,6 @@ const processor = unified()
   .use(indexer)
   .use(remark2rehype)
   .use(html)
-  .use(addClasses, {
-    h1: 'is-1',
-    h2: 'is-2'
-  })
 
 // Make /build/json if doesn't exist
 fs.ensureDir(jsonDir)
