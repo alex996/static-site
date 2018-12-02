@@ -1,8 +1,8 @@
-import 'bulma/css/bulma.css'
+import './styles.sass'
 import { h } from 'preact' // eslint-disable-line no-unused-vars
 import Router from 'preact-router'
 import { Navbar, Page } from './layouts'
-import { Home, Error } from './pages'
+import { Home, Blog, Error } from './pages'
 
 const App = props => (
   <main>
@@ -10,7 +10,9 @@ const App = props => (
     <Router>
       <Page path='/' component={Home} />
       <Page path='/about' />
-      <Page path='/blog' />
+      <Page path='/contact' />
+      <Page path='/blog' component={Blog} />
+      <Page path='/blog/:id' />
       <Page default component={Error} />
     </Router>
   </main>

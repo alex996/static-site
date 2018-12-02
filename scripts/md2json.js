@@ -1,43 +1,86 @@
-// https://unified.js.org/using-unified.html
-// https://www.npmjs.com/package/unified (used by react-markdown)
-
-const fs = require('fs-extra')
-const dir = require('node-dir')
 const unified = require('unified')
 const markdown = require('remark-parse')
+const frontmatter = require('remark-frontmatter')
+const parseYaml = require('remark-parse-yaml')
 const remark2rehype = require('remark-rehype')
 const html = require('rehype-stringify')
+const addClasses = require('rehype-add-classes')
 
-const input = 'content'
-const output = `build/json`
+const path = require('path')
+const fs = require('fs-extra')
+const dir = require('node-dir')
+const vfile = require('to-vfile')
 
-fs.ensureDir(output)
+const markdownDir = 'content'
+const jsonDir = 'build/json'
+const index = {}
+
+const indexer = () =>
+  (tree, vfile) => {
+    const { dir = '.', name } = path.parse(vfile.history[0])
+
+    if (dir) {
+      const { data: { parsedValue } } = tree.children[0]
+      const file = { slug: `/${dir}/${name}`, ...parsedValue }
+
+      if (index[dir]) {
+        index[dir].push(file)
+      } else {
+        index[dir] = [file]
+      }
+    }
+  }
+
+const processor = unified()
+  .use(markdown)
+  .use(frontmatter)
+  .use(parseYaml)
+  .use(indexer)
+  .use(remark2rehype)
+  .use(html)
+  .use(addClasses, {
+    h1: 'is-1',
+    h2: 'is-2'
+  })
+
+// Make /build/json if doesn't exist
+fs.ensureDir(jsonDir)
   .then(() => {
-    process.chdir(input)
+    // Change current dir to /content
+    process.chdir(markdownDir)
 
-    const processor = unified()
-      .use(markdown)
-      .use(remark2rehype)
-      .use(html)
+    // Recursively iterate all files & return filenames
+    return dir.promiseFiles('.')
+  })
+  .then(files => {
+    // Read & process each file in the array as vfile
+    const operations = files.map(filename => {
+      return vfile.read(filename)
+        .then(file => {
+          // Convert the file to HTML and save HTML in JSON
+          return processor.process(file, (err, { contents }) => {
+            if (err) throw err
 
-    dir.readFiles('.',
-      { match: /.md$/ },
-      (err, content, filename, next) => {
-        if (err) throw err
+            const [ fileNoExt ] = filename.split('.md')
+            const path = `../${jsonDir}/${fileNoExt}.json`
 
-        processor.process(content, (err, { contents }) => {
-          if (err) throw err
-
-          const [ fileNoExt ] = filename.split('.md')
-          const path = `../${output}/${fileNoExt}.json`
-
-          fs.outputJson(path, { contents })
+            // Write JSON and create the dir if doesn't exist
+            return fs.outputJson(path, { contents })
+          })
         })
+        .catch(console.error)
+    })
 
-        next()
-      }, (err, files) => {
-        if (err) throw err
-        console.log('Converted MD to JSON')
+    return Promise.all(operations)
+  })
+  .then(() => {
+    Object.entries(index).forEach(([dirname, files]) => {
+      // Sort the files by createdAt in desc order
+      files.sort((first, second) => {
+        return second.createdAt - first.createdAt
       })
+      // Write a JSON listing for each child dir
+      fs.outputJson(`../${jsonDir}/${dirname}/index.json`, files)
+    })
   })
   .catch(console.error)

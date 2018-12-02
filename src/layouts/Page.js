@@ -7,31 +7,31 @@ class Page extends Component {
   }
 
   componentDidMount () {
-    const { component, path } = this.props
+    const { component, url } = this.props
 
-    !component && this.fetchContents(path)
+    !component && this.fetchContents(url)
   }
 
   componentWillReceiveProps (nextProps) {
-    const { component, path } = nextProps
+    const { component, url } = nextProps
 
-    if (this.props.path !== path) {
+    if (this.props.url !== url) {
       this.setState({ err: null })
 
-      if (!component && !this.state[path]) {
-        this.fetchContents(path)
+      if (!component && !this.state[url]) {
+        this.fetchContents(url)
       }
     }
   }
 
   // TODO: move to api.js
-  fetchContents (path) {
-    fetch(`/json${path}.json`)
+  fetchContents (url) {
+    fetch(`/json${url}.json`)
       .then(res => {
         if (res.ok) {
           res.json().then(({ contents }) => {
             // TODO: cache in offline storage (cache with or service worker)
-            this.setState({ [path]: contents })
+            this.setState({ [url]: contents })
           })
         } else {
           this.setState({
@@ -60,19 +60,25 @@ class Page extends Component {
       return <Error {...err} />
     }
 
-    const { path, component: Component } = this.props
+    const { url, component: Component } = this.props
 
     if (Component) {
       return <Component {...this.props} />
     }
 
-    const html = this.state[path]
+    const html = this.state[url]
 
     if (!html) {
       return <h1>Loading...</h1>
     }
 
-    return <div dangerouslySetInnerHTML={{ __html: html }} />
+    return (
+      <section class='section'>
+        <div class='container'>
+          <div class='content' dangerouslySetInnerHTML={{ __html: html }} />
+        </div>
+      </section>
+    )
   }
 }
 

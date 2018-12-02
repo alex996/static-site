@@ -26,7 +26,7 @@
 - [ ] Enable nested routes, e.g. `/blog/how-i-build-this-site` (ref. [`jdown`](https://github.com/DanWebb/jdown))
   - loop recursively & mirror tree structure & filenames
 - [ ] Generate `index.json` listing for each subdir (`/blog`, `/series`)
-  - should include title, published at (Unix timestamp), **tags**
+  - should include title, published at (Unix timestamp), **tags**, img URL
     - maybe embed metadata in `md`, include in listing, then remove at build time?
   - posts/vids should be ordered by publish date (desc)
   - maybe `index0-20.json`, `index20-40.json` etc. + continuous scroll/load ?
