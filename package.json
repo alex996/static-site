@@ -1,11 +1,10 @@
 {
   "private": true,
-  "name": "code-realm",
+  "name": "static-site",
   "version": "1.0.0",
   "description": "",
   "main": "build/bundle.js",
   "keywords": [],
-  "author": "CodeRealm",
   "license": "ISC",
   "scripts": {
     "clean": "rimraf build",

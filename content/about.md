@@ -35,7 +35,7 @@ Lorem ipsum
 ```json
 {
   "private": true,
-  "name": "code-realm",
+  "name": "static-site",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
